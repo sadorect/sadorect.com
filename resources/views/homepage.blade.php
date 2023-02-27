@@ -11,8 +11,8 @@
                         <div class="p-3" style="max-width: 900px;">
                             <h5 class="text-white text-uppercase">Business Consultancy</h5>
                             <h1 class="display-1 text-white mb-md-4">We Provide Solution On Your Business</h1>
-                            <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 rounded-pill">Get Quote</a>
-                            <a href="" class="btn btn-secondary py-md-3 px-md-5 rounded-pill">Contact Us</a>
+                            <!--a href="" class="btn btn-primary py-md-3 px-md-5 me-3 rounded-pill">Get Quote</a-->
+                            <a href="{{route('contact')}}" class="btn btn-secondary py-md-3 px-md-5 rounded-pill">Contact Us</a>
                         </div>
                     </div>
                 </div>
@@ -22,8 +22,8 @@
                         <div class="p-3" style="max-width: 900px;">
                             <h5 class="text-white text-uppercase">Business Consultancy</h5>
                             <h1 class="display-1 text-white mb-md-4">Take Our Help To Reach The Top Level</h1>
-                            <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 rounded-pill">Get Quote</a>
-                            <a href="" class="btn btn-secondary py-md-3 px-md-5 rounded-pill">Contact Us</a>
+                            <!--a href="" class="btn btn-primary py-md-3 px-md-5 me-3 rounded-pill">Get Quote</a-->
+                            <a href="{{route('contact')}}" class="btn btn-secondary py-md-3 px-md-5 rounded-pill">Contact Us</a>
                         </div>
                     </div>
                 </div>

@@ -2,9 +2,8 @@
   <div class="row g-0">
       <div class="col-lg-6 py-6 px-5">
           <h1 class="display-5 mb-4">Welcome To <span class="text-primary">SADORECT SYSTEMS</span></h1>
-          <h4 class="text-primary mb-4">Diam dolor diam ipsum sit. Clita erat ipsum et lorem stet no lorem sit clita duo justo magna dolore</h4>
-          <p class="mb-4">Et stet ipsum nonumy rebum eos justo, accusam invidunt aliquyam stet magna at et sanctus, vero sea sit amet dolores, sit dolor duo invidunt dolor, kasd rebum consetetur diam invidunt erat stet. Accusam nonumy lorem kasd eirmod. Justo clita sadipscing ea invidunt rebum sadipscing consetetur. Amet diam amet amet sanctus sanctus invidunt erat ipsum eirmod.</p>
-          <a href="" class="btn btn-primary py-md-3 px-md-5 rounded-pill">Get A Quote</a>
+          <h4 class="text-primary mb-4"></h4><p>As a business owner or manager, you are no doubt always looking for ways to improve efficiency, reduce costs, and stay ahead of the competition. One way to achieve these goals is by leveraging the expertise of an IT consulting firm.</p>
+          <a href="{{route('contact')}}" class="btn btn-primary py-md-3 px-md-5 rounded-pill">Let's Talk</a>
       </div>
       <div class="col-lg-6">
           <div class="h-100 d-flex flex-column justify-content-center bg-primary p-5">
