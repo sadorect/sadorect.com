@@ -1,4 +1,4 @@
-@include('google-ads.php');
+@include('google-ads');
     
     
     <!-- Footer Start -->
