@@ -34,6 +34,8 @@
     <!-- Template Stylesheet -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="{{ request()->is('login') ? 'css/login-form.css' : ''}}" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4048280593346646"
+     crossorigin="anonymous"></script>
 </head>
 <div>
   <!-- Topbar Start -->
