@@ -51,7 +51,8 @@
                     </div>
                 </form>
             </div>
-            @include('google-ads');
+            <x-smart-ad-component slug="Google-Ads"/>
+
             <!--div class="col-lg-6" style="min-height: 400px;">
                 <div class="position-relative h-100">
                     <iframe class="position-relative w-100 h-100"

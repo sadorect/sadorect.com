@@ -1,15 +1,24 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => NULL,
+        'reference' => 'ba7501e7cb6bb32e9de2b1beb66e78821a9549c7',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
     'versions' => array(
+        '5balloons/laravel-smart-ads' => array(
+            'pretty_version' => 'v1.2.8',
+            'version' => '1.2.8.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../5balloons/laravel-smart-ads',
+            'aliases' => array(),
+            'reference' => '6c59296e301241e4a88ceb2e20d0d1cdcdce7baa',
+            'dev_requirement' => false,
+        ),
         'brick/math' => array(
             'pretty_version' => '0.10.2',
             'version' => '0.10.2.0',
@@ -374,12 +383,12 @@
             'dev_requirement' => false,
         ),
         'laravel/laravel' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => NULL,
+            'reference' => 'ba7501e7cb6bb32e9de2b1beb66e78821a9549c7',
             'dev_requirement' => false,
         ),
         'laravel/pint' => array(
@@ -461,6 +470,15 @@
             'install_path' => __DIR__ . '/../league/mime-type-detection',
             'aliases' => array(),
             'reference' => 'ff6248ea87a9f116e78edd6002e39e5128a0d4dd',
+            'dev_requirement' => false,
+        ),
+        'livewire/livewire' => array(
+            'pretty_version' => 'v2.12.3',
+            'version' => '2.12.3.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../livewire/livewire',
+            'aliases' => array(),
+            'reference' => '019b1e69d8cd8c7e749eba7a38e4fa69ecbc8f74',
             'dev_requirement' => false,
         ),
         'mockery/mockery' => array(
@@ -958,6 +976,15 @@
             'aliases' => array(),
             'reference' => '2b79cf6ed40946b64ac6713d7d2da8a9d87f612b',
             'dev_requirement' => true,
+        ),
+        'spatie/laravel-package-tools' => array(
+            'pretty_version' => '1.14.2',
+            'version' => '1.14.2.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spatie/laravel-package-tools',
+            'aliases' => array(),
+            'reference' => 'bab62023a4745a61170ad5424184533685e73c2d',
+            'dev_requirement' => false,
         ),
         'symfony/console' => array(
             'pretty_version' => 'v6.2.0',

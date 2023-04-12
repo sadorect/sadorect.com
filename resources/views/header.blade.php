@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>Sadorect Systems</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -36,6 +37,8 @@
     <link href="{{ request()->is('login') ? 'css/login-form.css' : ''}}" rel="stylesheet">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4048280593346646"
      crossorigin="anonymous"></script>
+
+     <script src="{{ asset('vendor/smart-ads/js/smart-banner.min.js') }}"></script>
 </head>
 <div>
   <!-- Topbar Start -->

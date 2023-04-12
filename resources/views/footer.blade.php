@@ -1,4 +1,4 @@
-@include('google-ads');
+<x-smart-ad-component slug="Google-Ads"/>
     
     
     <!-- Footer Start -->
