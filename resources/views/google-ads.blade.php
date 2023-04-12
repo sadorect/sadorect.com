@@ -16,11 +16,11 @@ const elementIns = document.querySelectorAll('ins');
 
 // Loop through each element and change the display style
 for(var i = 0; i < elementIframe.length; i++) {
-  elementIframe[i].style.display = 'visible';
+  elementIframe[i].style.display = 'block';
 }
 
 for(var j = 0; j < elementIns.length; j++) {
-  elementIns[j].style.display = 'visible';
+  elementIns[j].style.display = 'block';
 }
 
 </script>
