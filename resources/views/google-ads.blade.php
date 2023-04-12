@@ -11,12 +11,16 @@
      (adsbygoogle = window.adsbygoogle || []).push({});
 
      // Get all elements with display:none;
-var elements = document.querySelectorAll('[style*="display:none;"]');
+const elementIframe = document.querySelectorAll('iframe');
+const elementIns = document.querySelectorAll('ins');
 
 // Loop through each element and change the display style
-for(var i = 0; i < elements.length; i++) {
-  elements[i].style.display = 'visible';
+for(var i = 0; i < elementIframe.length; i++) {
+  elementIframe[i].style.display = 'visible';
 }
 
+for(var j = 0; j < elementIns.length; j++) {
+  elementIns[j].style.display = 'visible';
+}
 
 </script>
