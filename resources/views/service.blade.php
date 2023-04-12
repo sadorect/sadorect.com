@@ -83,7 +83,8 @@
     <!-- Quote Start -->
     <div class="container-fluid bg-secondary px-0">
         <div class="row g-0">
-            <div class="col-lg-6 py-6 px-5">
+            @include('google-ads');
+            <!--div class="col-lg-6 py-6 px-5">
                 <h1 class="display-5 mb-4">Request A Free Quote</h1>
                 <p class="mb-4">Kasd vero erat ea amet justo no stet, et elitr no dolore no elitr sea kasd et dolor diam tempor. Nonumy sed dolore no eirmod sit nonumy vero lorem amet stet diam at. Ea at lorem sed et, lorem et rebum ut eirmod gubergren, dolor ea duo diam justo dolor diam ipsum dolore stet stet elitr ut. Ipsum amet labore lorem lorem diam magna sea, eos sed dolore elitr.</p>
                 <form>
@@ -115,14 +116,14 @@
                         </div>
                     </div>
                 </form>
-            </div>
+            </div-->
             <div class="col-lg-6" style="min-height: 400px;">
                 <div class="position-relative h-100">
                     <img class="position-absolute w-100 h-100" src="img/quote.jpg" style="object-fit: cover;">
                 </div>
             </div>
         </div>
-    </div>
+    </div-->
     <!-- Quote End -->
     
 </x-layout>

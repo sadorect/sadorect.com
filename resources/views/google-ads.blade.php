@@ -9,4 +9,14 @@
      data-full-width-responsive="true"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
+
+     // Get all elements with display:none;
+var elements = document.querySelectorAll('[style*="display:none;"]');
+
+// Loop through each element and change the display style
+for(var i = 0; i < elements.length; i++) {
+  elements[i].style.display = 'visible';
+}
+
+
 </script>
