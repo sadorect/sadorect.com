@@ -39,7 +39,7 @@
             </div-->
             <div class="col-lg-3 col-md-6">
                 <h3 class="text-white mb-4">Get In Touch</h3>
-                <p class="mb-2"><i class="bi bi-geo-alt text-primary me-2"></i>11b, Fatai Arobieke Street, Off Admiralty Road, Lekki, Lagos</p>
+                <p class="mb-2"><i class="bi bi-geo-alt text-primary me-2"></i>11b, Fatai Arobieke Street, Off Admiralty Road, Lekki Phase 1, Lagos</p>
                 <p class="mb-2"><i class="bi bi-geo-alt text-primary me-2"></i>47A, King George Road, Onikan, Lagos</p>
                 <p class="mb-2"><i class="bi bi-envelope-open text-primary me-2"></i>info@sadorect.com</p>
                 <p class="mb-0"><i class="bi bi-telephone text-primary me-2"></i>+234 703 453 1814</p>
