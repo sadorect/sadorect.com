@@ -42,7 +42,8 @@
                         <button class="text-body py-2 px-3 border-end"><small>Logout</small></button>
                     </form>
                 @else
-                    <a class="text-body py-2 px-3 border-end" href=""><small>Support</small></a>
+                    <a class="text-white py-2 px-3 border-end" href=""><small>Support</small></a>
+                    <a class="text-white py-2 px-3 border-end" href="{{ route('login')}}"><small>Login</small></a>
                 @endauth
             </div>
         </div>
@@ -71,6 +72,8 @@
         <div class="navbar-nav ms-auto py-0 me-n3">
             <a href="{{ route('/')}}" class="nav-item nav-link {{ request()->is('/') ? 'active' : ''}}">Home</a>
             <a href="{{ route('service')}}" class="nav-item nav-link {{ request()->is('service') ? 'active' : ''}}">Service</a>
+            <a href="{{ route('portfolio')}}" class="nav-item nav-link {{ request()->is('portfolio') ? 'active' : ''}}">Portfolio</a>
+
             <a href="contact" class="nav-item nav-link {{ request()->is('contact') ? 'active' : ''}}">Contact</a>
         </div>
     </div>

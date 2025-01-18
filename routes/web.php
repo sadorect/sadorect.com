@@ -48,6 +48,9 @@ Route::get('/create-post', [PostController::class, 'createPost'])->name('create-
 Route::post('/create-post', [PostController::class, 'storeNewPost'])->name('create.post');
 Route::get('/post/{post}', [PostController::class, 'viewSinglePost'])->name('post');
 
+Route::get('/portfolio', function () {
+    return view('portfolio');
+})->name('portfolio');
 
 
 
