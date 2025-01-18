@@ -26,7 +26,7 @@ class Event
     /**
      * The command string.
      *
-     * @var string
+     * @var string|null
      */
     public $command;
 
@@ -38,6 +38,13 @@ class Event
     public $expression = '* * * * *';
 
     /**
+     * How often to repeat the event during a minute.
+     *
+     * @var int|null
+     */
+    public $repeatSeconds = null;
+
+    /**
      * The timezone the date should be evaluated on.
      *
      * @var \DateTimeZone|string
@@ -47,7 +54,7 @@ class Event
     /**
      * The user the command should run as.
      *
-     * @var string
+     * @var string|null
      */
     public $user;
 
@@ -80,7 +87,7 @@ class Event
     public $onOneServer = false;
 
     /**
-     * The amount of time the mutex should be valid.
+     * The number of minutes the mutex should be valid.
      *
      * @var int
      */
@@ -138,7 +145,7 @@ class Event
     /**
      * The human readable description of the event.
      *
-     * @var string
+     * @var string|null
      */
     public $description;
 
@@ -155,6 +162,15 @@ class Event
      * @var \Closure|null
      */
     public $mutexNameResolver;
+
+    /**
+     * The last time the event was checked for eligibility to run.
+     *
+     * Utilized by sub-minute repeated events.
+     *
+     * @var \Illuminate\Support\Carbon|null
+     */
+    protected $lastChecked;
 
     /**
      * The exit status code of the command.
@@ -219,6 +235,27 @@ class Event
     public function shouldSkipDueToOverlapping()
     {
         return $this->withoutOverlapping && ! $this->mutex->create($this);
+    }
+
+    /**
+     * Determine if the event has been configured to repeat multiple times per minute.
+     *
+     * @return bool
+     */
+    public function isRepeatable()
+    {
+        return ! is_null($this->repeatSeconds);
+    }
+
+    /**
+     * Determine if the event is ready to repeat.
+     *
+     * @return bool
+     */
+    public function shouldRepeatNow()
+    {
+        return $this->isRepeatable()
+            && $this->lastChecked?->diffInSeconds() >= $this->repeatSeconds;
     }
 
     /**
@@ -370,6 +407,8 @@ class Event
      */
     public function filtersPass($app)
     {
+        $this->lastChecked = Date::now();
+
         foreach ($this->filters as $callback) {
             if (! $app->call($callback)) {
                 return false;
@@ -658,6 +697,8 @@ class Event
 
     /**
      * Do not allow the event to overlap each other.
+     *
+     * The expiration time of the underlying cache lock may be specified in minutes.
      *
      * @param  int  $expiresAt
      * @return $this

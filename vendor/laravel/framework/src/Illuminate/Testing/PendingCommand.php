@@ -3,6 +3,7 @@
 namespace Illuminate\Testing;
 
 use Illuminate\Console\OutputStyle;
+use Illuminate\Console\PromptValidationException;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Support\Arrayable;
@@ -300,6 +301,8 @@ class PendingCommand
             }
 
             throw $e;
+        } catch (PromptValidationException) {
+            $exitCode = Command::FAILURE;
         }
 
         if ($this->expectedExitCode !== null) {
@@ -368,7 +371,7 @@ class PendingCommand
     protected function mockConsoleOutput()
     {
         $mock = Mockery::mock(OutputStyle::class.'[askQuestion]', [
-            (new ArrayInput($this->parameters)), $this->createABufferedOutputMock(),
+            new ArrayInput($this->parameters), $this->createABufferedOutputMock(),
         ]);
 
         foreach ($this->test->expectedQuestions as $i => $question) {

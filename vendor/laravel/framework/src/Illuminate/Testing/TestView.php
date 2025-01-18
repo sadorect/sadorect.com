@@ -107,6 +107,18 @@ class TestView
     }
 
     /**
+     * Assert that the view's rendered content is empty.
+     *
+     * @return $this
+     */
+    public function assertViewEmpty()
+    {
+        PHPUnit::assertEmpty($this->rendered);
+
+        return $this;
+    }
+
+    /**
      * Assert that the given string is contained within the view.
      *
      * @param  string  $value
@@ -131,7 +143,7 @@ class TestView
      */
     public function assertSeeInOrder(array $values, $escape = true)
     {
-        $values = $escape ? array_map('e', ($values)) : $values;
+        $values = $escape ? array_map('e', $values) : $values;
 
         PHPUnit::assertThat($values, new SeeInOrder($this->rendered));
 
@@ -163,7 +175,7 @@ class TestView
      */
     public function assertSeeTextInOrder(array $values, $escape = true)
     {
-        $values = $escape ? array_map('e', ($values)) : $values;
+        $values = $escape ? array_map('e', $values) : $values;
 
         PHPUnit::assertThat($values, new SeeInOrder(strip_tags($this->rendered)));
 

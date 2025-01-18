@@ -13,11 +13,17 @@ class Package
 
     public bool $hasViews = false;
 
+    public bool $hasInertiaComponents = false;
+
     public ?string $viewNamespace = null;
 
     public bool $hasTranslations = false;
 
     public bool $hasAssets = false;
+
+    public bool $discoversMigrations = false;
+
+    public ?string $migrationsPath = null;
 
     public bool $runsMigrations = false;
 
@@ -26,6 +32,8 @@ class Package
     public array $routeFileNames = [];
 
     public array $commands = [];
+
+    public array $consoleCommands = [];
 
     public array $viewComponents = [];
 
@@ -46,7 +54,7 @@ class Package
 
     public function hasConfigFile($configFileName = null): static
     {
-        $configFileName = $configFileName ?? $this->shortName();
+        $configFileName ??= $this->shortName();
 
         if (! is_array($configFileName)) {
             $configFileName = [$configFileName];
@@ -70,7 +78,7 @@ class Package
 
         $callable($installCommand);
 
-        $this->commands[] = $installCommand;
+        $this->consoleCommands[] = $installCommand;
 
         return $this;
     }
@@ -80,9 +88,18 @@ class Package
         return Str::after($this->name, 'laravel-');
     }
 
-    public function hasViews(string $namespace = null): static
+    public function hasViews(?string $namespace = null): static
     {
         $this->hasViews = true;
+
+        $this->viewNamespace = $namespace;
+
+        return $this;
+    }
+
+    public function hasInertiaComponents(?string $namespace = null): static
+    {
+        $this->hasInertiaComponents = true;
 
         $this->viewNamespace = $namespace;
 
@@ -139,6 +156,14 @@ class Package
         return $this;
     }
 
+    public function discoversMigrations(bool $discoversMigrations = true, string $path = '/database/migrations'): static
+    {
+        $this->discoversMigrations = $discoversMigrations;
+        $this->migrationsPath = $path;
+
+        return $this;
+    }
+
     public function runsMigrations(bool $runsMigrations = true): static
     {
         $this->runsMigrations = $runsMigrations;
@@ -177,6 +202,20 @@ class Package
         return $this;
     }
 
+    public function hasConsoleCommand(string $commandClassName): static
+    {
+        $this->consoleCommands[] = $commandClassName;
+
+        return $this;
+    }
+
+    public function hasConsoleCommands(...$commandClassNames): static
+    {
+        $this->consoleCommands = array_merge($this->consoleCommands, collect($commandClassNames)->flatten()->toArray());
+
+        return $this;
+    }
+
     public function hasRoute(string $routeFileName): static
     {
         $this->routeFileNames[] = $routeFileName;
@@ -191,7 +230,7 @@ class Package
         return $this;
     }
 
-    public function basePath(string $directory = null): string
+    public function basePath(?string $directory = null): string
     {
         if ($directory === null) {
             return $this->basePath;

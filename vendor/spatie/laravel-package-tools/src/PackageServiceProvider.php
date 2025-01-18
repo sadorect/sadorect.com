@@ -3,6 +3,7 @@
 namespace Spatie\LaravelPackageTools;
 
 use Carbon\Carbon;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -68,24 +69,15 @@ abstract class PackageServiceProvider extends ServiceProvider
                 ], "{$this->packageView($this->package->viewNamespace)}-views");
             }
 
-            $now = Carbon::now();
-            foreach ($this->package->migrationFileNames as $migrationFileName) {
-                $filePath = $this->package->basePath("/../database/migrations/{$migrationFileName}.php");
-                if (! file_exists($filePath)) {
-                    // Support for the .stub file extension
-                    $filePath .= '.stub';
-                }
+            if ($this->package->hasInertiaComponents) {
+                $packageDirectoryName = Str::of($this->packageView($this->package->viewNamespace))->studly()->remove('-')->value();
 
                 $this->publishes([
-                    $filePath => $this->generateMigrationName(
-                        $migrationFileName,
-                        $now->addSecond()
-                    ), ], "{$this->package->shortName()}-migrations");
-
-                if ($this->package->runsMigrations) {
-                    $this->loadMigrationsFrom($filePath);
-                }
+                    $this->package->basePath('/../resources/js/Pages') => base_path("resources/js/Pages/{$packageDirectoryName}"),
+                ], "{$this->packageView($this->package->viewNamespace)}-inertia-components");
             }
+
+            $this->bootPackageMigrations();
 
             if ($this->package->hasTranslations) {
                 $this->publishes([
@@ -102,6 +94,10 @@ abstract class PackageServiceProvider extends ServiceProvider
 
         if (! empty($this->package->commands)) {
             $this->commands($this->package->commands);
+        }
+
+        if (! empty($this->package->consoleCommands) && $this->app->runningInConsole()) {
+            $this->commands($this->package->consoleCommands);
         }
 
         if ($this->package->hasTranslations) {
@@ -155,7 +151,8 @@ abstract class PackageServiceProvider extends ServiceProvider
 
     public static function generateMigrationName(string $migrationFileName, Carbon $now): string
     {
-        $migrationsPath = 'migrations/';
+        $migrationsPath = 'migrations/' . dirname($migrationFileName) . '/';
+        $migrationFileName = basename($migrationFileName);
 
         $len = strlen($migrationFileName) + 4;
 
@@ -199,5 +196,56 @@ abstract class PackageServiceProvider extends ServiceProvider
     public function packageView(?string $namespace)
     {
         return is_null($namespace) ? $this->package->shortName() : $this->package->viewNamespace;
+    }
+
+    protected function bootPackageMigrations(): void
+    {
+        if ($this->package->discoversMigrations) {
+            $this->discoverMigrations();
+
+            return;
+        }
+
+        $now = Carbon::now();
+        foreach ($this->package->migrationFileNames as $migrationFileName) {
+            $filePath = $this->package->basePath("/../database/migrations/{$migrationFileName}.php");
+            if (! file_exists($filePath)) {
+                // Support for the .stub file extension
+                $filePath .= '.stub';
+            }
+
+            $this->publishes([
+                $filePath => $this->generateMigrationName(
+                    $migrationFileName,
+                    $now->addSecond()
+                ), ], "{$this->package->shortName()}-migrations");
+
+            if ($this->package->runsMigrations) {
+                $this->loadMigrationsFrom($filePath);
+            }
+        }
+    }
+
+    protected function discoverMigrations(): void
+    {
+        $now = Carbon::now();
+        $path = trim($this->package->migrationsPath, '/');
+        $files = (new Filesystem())->files($this->package->basePath("/../{$path}"));
+
+        foreach ($files as $file) {
+            $filePath = $file->getPathname();
+
+            $migrationFileName = Str::replace(['.stub', '.php'], '', $file->getFilename());
+
+            $this->publishes([
+                $filePath => $this->generateMigrationName(
+                    $migrationFileName,
+                    $now->addSecond()
+                ), ], "{$this->package->shortName()}-migrations");
+
+            if ($this->package->runsMigrations) {
+                $this->loadMigrationsFrom($filePath);
+            }
+        }
     }
 }

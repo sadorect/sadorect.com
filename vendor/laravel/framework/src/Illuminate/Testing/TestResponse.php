@@ -15,6 +15,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Tappable;
 use Illuminate\Support\ViewErrorBag;
@@ -25,6 +26,7 @@ use LogicException;
 use PHPUnit\Framework\ExpectationFailedException;
 use ReflectionProperty;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
@@ -32,7 +34,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
  */
 class TestResponse implements ArrayAccess
 {
-    use Tappable, Macroable {
+    use Concerns\AssertsStatusCodes, Conditionable, Tappable, Macroable {
         __call as macroCall;
     }
 
@@ -96,78 +98,26 @@ class TestResponse implements ArrayAccess
     }
 
     /**
-     * Assert that the response has a 200 status code.
+     * Assert that the Precognition request was successful.
      *
      * @return $this
      */
-    public function assertOk()
+    public function assertSuccessfulPrecognition()
     {
-        return $this->assertStatus(200);
-    }
+        $this->assertNoContent();
 
-    /**
-     * Assert that the response has a 201 status code.
-     *
-     * @return $this
-     */
-    public function assertCreated()
-    {
-        return $this->assertStatus(201);
-    }
+        PHPUnit::assertTrue(
+            $this->headers->has('Precognition-Success'),
+            'Header [Precognition-Success] not present on response.'
+        );
 
-    /**
-     * Assert that the response has the given status code and no content.
-     *
-     * @param  int  $status
-     * @return $this
-     */
-    public function assertNoContent($status = 204)
-    {
-        $this->assertStatus($status);
-
-        PHPUnit::assertEmpty($this->getContent(), 'Response content is not empty.');
+        PHPUnit::assertSame(
+            'true',
+            $this->headers->get('Precognition-Success'),
+            'The Precognition-Success header was found, but the value is not `true`.'
+        );
 
         return $this;
-    }
-
-    /**
-     * Assert that the response has a not found status code.
-     *
-     * @return $this
-     */
-    public function assertNotFound()
-    {
-        return $this->assertStatus(404);
-    }
-
-    /**
-     * Assert that the response has a forbidden status code.
-     *
-     * @return $this
-     */
-    public function assertForbidden()
-    {
-        return $this->assertStatus(403);
-    }
-
-    /**
-     * Assert that the response has an unauthorized status code.
-     *
-     * @return $this
-     */
-    public function assertUnauthorized()
-    {
-        return $this->assertStatus(401);
-    }
-
-    /**
-     * Assert that the response has a 422 status code.
-     *
-     * @return $this
-     */
-    public function assertUnprocessable()
-    {
-        return $this->assertStatus(422);
     }
 
     /**
@@ -195,7 +145,7 @@ class TestResponse implements ArrayAccess
     {
         $message = $this->statusMessageWithDetails($status, $actual = $this->getStatusCode());
 
-        PHPUnit::assertSame($actual, $status, $message);
+        PHPUnit::assertSame($status, $actual, $message);
 
         return $this;
     }
@@ -268,11 +218,7 @@ class TestResponse implements ArrayAccess
             $this->statusMessageWithDetails('201, 301, 302, 303, 307, 308', $this->getStatusCode()),
         );
 
-        $request = Request::create($this->headers->get('Location'));
-
-        PHPUnit::assertEquals(
-            app('url')->to($uri), $request->fullUrl()
-        );
+        $this->assertLocation($uri);
 
         return $this;
     }
@@ -364,7 +310,7 @@ class TestResponse implements ArrayAccess
     public function assertLocation($uri)
     {
         PHPUnit::assertEquals(
-            app('url')->to($uri), app('url')->to($this->headers->get('Location'))
+            app('url')->to($uri), app('url')->to($this->headers->get('Location', ''))
         );
 
         return $this;
@@ -378,7 +324,7 @@ class TestResponse implements ArrayAccess
      */
     public function assertDownload($filename = null)
     {
-        $contentDisposition = explode(';', $this->headers->get('content-disposition'));
+        $contentDisposition = explode(';', $this->headers->get('content-disposition', ''));
 
         if (trim($contentDisposition[0]) !== 'attachment') {
             PHPUnit::fail(
@@ -553,7 +499,8 @@ class TestResponse implements ArrayAccess
                     $cookie->isSecure(),
                     $cookie->isHttpOnly(),
                     $cookie->isRaw(),
-                    $cookie->getSameSite()
+                    $cookie->getSameSite(),
+                    $cookie->isPartitioned()
                 );
             }
         }
@@ -573,6 +520,30 @@ class TestResponse implements ArrayAccess
     }
 
     /**
+     * Assert that the given string matches the streamed response content.
+     *
+     * @param  string  $value
+     * @return $this
+     */
+    public function assertStreamedContent($value)
+    {
+        PHPUnit::assertSame($value, $this->streamedContent());
+
+        return $this;
+    }
+
+    /**
+     * Assert that the given array matches the streamed JSON response content.
+     *
+     * @param  array  $value
+     * @return $this
+     */
+    public function assertStreamedJsonContent($value)
+    {
+        return $this->assertStreamedContent(json_encode($value, JSON_THROW_ON_ERROR));
+    }
+
+    /**
      * Assert that the given string or array of strings are contained within the response.
      *
      * @param  string|array  $value
@@ -583,7 +554,7 @@ class TestResponse implements ArrayAccess
     {
         $value = Arr::wrap($value);
 
-        $values = $escape ? array_map('e', ($value)) : $value;
+        $values = $escape ? array_map('e', $value) : $value;
 
         foreach ($values as $value) {
             PHPUnit::assertStringContainsString((string) $value, $this->getContent());
@@ -601,7 +572,7 @@ class TestResponse implements ArrayAccess
      */
     public function assertSeeInOrder(array $values, $escape = true)
     {
-        $values = $escape ? array_map('e', ($values)) : $values;
+        $values = $escape ? array_map('e', $values) : $values;
 
         PHPUnit::assertThat($values, new SeeInOrder($this->getContent()));
 
@@ -619,13 +590,13 @@ class TestResponse implements ArrayAccess
     {
         $value = Arr::wrap($value);
 
-        $values = $escape ? array_map('e', ($value)) : $value;
+        $values = $escape ? array_map('e', $value) : $value;
 
-        tap(strip_tags($this->getContent()), function ($content) use ($values) {
-            foreach ($values as $value) {
-                PHPUnit::assertStringContainsString((string) $value, $content);
-            }
-        });
+        $content = strip_tags($this->getContent());
+
+        foreach ($values as $value) {
+            PHPUnit::assertStringContainsString((string) $value, $content);
+        }
 
         return $this;
     }
@@ -639,7 +610,7 @@ class TestResponse implements ArrayAccess
      */
     public function assertSeeTextInOrder(array $values, $escape = true)
     {
-        $values = $escape ? array_map('e', ($values)) : $values;
+        $values = $escape ? array_map('e', $values) : $values;
 
         PHPUnit::assertThat($values, new SeeInOrder(strip_tags($this->getContent())));
 
@@ -657,7 +628,7 @@ class TestResponse implements ArrayAccess
     {
         $value = Arr::wrap($value);
 
-        $values = $escape ? array_map('e', ($value)) : $value;
+        $values = $escape ? array_map('e', $value) : $value;
 
         foreach ($values as $value) {
             PHPUnit::assertStringNotContainsString((string) $value, $this->getContent());
@@ -677,13 +648,13 @@ class TestResponse implements ArrayAccess
     {
         $value = Arr::wrap($value);
 
-        $values = $escape ? array_map('e', ($value)) : $value;
+        $values = $escape ? array_map('e', $value) : $value;
 
-        tap(strip_tags($this->getContent()), function ($content) use ($values) {
-            foreach ($values as $value) {
-                PHPUnit::assertStringNotContainsString((string) $value, $content);
-            }
-        });
+        $content = strip_tags($this->getContent());
+
+        foreach ($values as $value) {
+            PHPUnit::assertStringNotContainsString((string) $value, $content);
+        }
 
         return $this;
     }
@@ -724,6 +695,20 @@ class TestResponse implements ArrayAccess
     public function assertJsonPath($path, $expect)
     {
         $this->decodeResponseJson()->assertPath($path, $expect);
+
+        return $this;
+    }
+
+    /**
+     * Assert that the given path in the response contains all of the expected values without looking at the order.
+     *
+     * @param  string  $path
+     * @param  array  $expect
+     * @return $this
+     */
+    public function assertJsonPathCanonicalizing($path, array $expect)
+    {
+        $this->decodeResponseJson()->assertPathCanonicalizing($path, $expect);
 
         return $this;
     }
@@ -814,7 +799,7 @@ class TestResponse implements ArrayAccess
      * @param  array|null  $responseData
      * @return $this
      */
-    public function assertJsonStructure(array $structure = null, $responseData = null)
+    public function assertJsonStructure(?array $structure = null, $responseData = null)
     {
         $this->decodeResponseJson()->assertStructure($structure, $responseData);
 
@@ -949,6 +934,48 @@ class TestResponse implements ArrayAccess
                 "Found unexpected validation error for key: '{$key}'"
             );
         }
+
+        return $this;
+    }
+
+    /**
+     * Assert that the given key is a JSON array.
+     *
+     * @param  string|null  $key
+     * @return $this
+     */
+    public function assertJsonIsArray($key = null)
+    {
+        $data = $this->json($key);
+
+        $encodedData = json_encode($data);
+
+        PHPUnit::assertTrue(
+            is_array($data)
+            && str_starts_with($encodedData, '[')
+            && str_ends_with($encodedData, ']')
+        );
+
+        return $this;
+    }
+
+    /**
+     * Assert that the given key is a JSON object.
+     *
+     * @param  string|null  $key
+     * @return $this
+     */
+    public function assertJsonIsObject($key = null)
+    {
+        $data = $this->json($key);
+
+        $encodedData = json_encode($data);
+
+        PHPUnit::assertTrue(
+            is_array($data)
+            && str_starts_with($encodedData, '{')
+            && str_ends_with($encodedData, '}')
+        );
 
         return $this;
     }
@@ -1190,26 +1217,28 @@ class TestResponse implements ArrayAccess
 
         foreach (Arr::wrap($errors) as $key => $value) {
             PHPUnit::assertArrayHasKey(
-                (is_int($key)) ? $value : $key,
+                $resolvedKey = (is_int($key)) ? $value : $key,
                 $sessionErrors,
-                "Failed to find a validation error in session for key: '{$value}'".PHP_EOL.PHP_EOL.$errorMessage
+                "Failed to find a validation error in session for key: '{$resolvedKey}'".PHP_EOL.PHP_EOL.$errorMessage
             );
 
-            if (! is_int($key)) {
-                $hasError = false;
+            foreach (Arr::wrap($value) as $message) {
+                if (! is_int($key)) {
+                    $hasError = false;
 
-                foreach (Arr::wrap($sessionErrors[$key]) as $sessionErrorMessage) {
-                    if (Str::contains($sessionErrorMessage, $value)) {
-                        $hasError = true;
+                    foreach (Arr::wrap($sessionErrors[$key]) as $sessionErrorMessage) {
+                        if (Str::contains($sessionErrorMessage, $message)) {
+                            $hasError = true;
 
-                        break;
+                            break;
+                        }
                     }
-                }
 
-                if (! $hasError) {
-                    PHPUnit::fail(
-                        "Failed to find a validation error for key and message: '$key' => '$value'".PHP_EOL.PHP_EOL.$errorMessage
-                    );
+                    if (! $hasError) {
+                        PHPUnit::fail(
+                            "Failed to find a validation error for key and message: '$key' => '$message'".PHP_EOL.PHP_EOL.$errorMessage
+                        );
+                    }
                 }
             }
         }
@@ -1547,7 +1576,8 @@ class TestResponse implements ArrayAccess
             return $this->streamedContent;
         }
 
-        if (! $this->baseResponse instanceof StreamedResponse) {
+        if (! $this->baseResponse instanceof StreamedResponse
+            && ! $this->baseResponse instanceof StreamedJsonResponse) {
             PHPUnit::fail('The response is not a streamed response.');
         }
 
@@ -1621,7 +1651,7 @@ class TestResponse implements ArrayAccess
      */
     protected function appendExceptionToException($exceptionToAppend, $exception)
     {
-        $exceptionMessage = $exceptionToAppend->getMessage();
+        $exceptionMessage = is_string($exceptionToAppend) ? $exceptionToAppend : $exceptionToAppend->getMessage();
 
         $exceptionToAppend = (string) $exceptionToAppend;
 
@@ -1649,7 +1679,7 @@ class TestResponse implements ArrayAccess
     protected function appendErrorsToException($errors, $exception, $json = false)
     {
         $errors = $json
-            ? json_encode($errors, JSON_PRETTY_PRINT)
+            ? json_encode($errors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
             : implode(PHP_EOL, Arr::flatten($errors));
 
         // JSON error messages may already contain the errors, so we shouldn't duplicate them...
@@ -1677,8 +1707,6 @@ class TestResponse implements ArrayAccess
     {
         $property = new ReflectionProperty($exception, 'message');
 
-        $property->setAccessible(true);
-
         $property->setValue(
             $exception,
             $exception->getMessage().PHP_EOL.PHP_EOL.$message.PHP_EOL
@@ -1702,7 +1730,7 @@ class TestResponse implements ArrayAccess
      * Proxy isset() checks to the underlying base response.
      *
      * @param  string  $key
-     * @return mixed
+     * @return bool
      */
     public function __isset($key)
     {

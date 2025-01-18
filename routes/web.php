@@ -45,7 +45,7 @@ Route::middleware('auth')->group(function () {
 
 //Blog Post Routes
 Route::get('/create-post', [PostController::class, 'createPost'])->name('create-post');
-Route::post('/create-post', [PostController::class, 'storeNewPost'])->name('create-post');
+Route::post('/create-post', [PostController::class, 'storeNewPost'])->name('create.post');
 Route::get('/post/{post}', [PostController::class, 'viewSinglePost'])->name('post');
 
 

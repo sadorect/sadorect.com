@@ -8,6 +8,10 @@
 
 Simple Ad, Banner, Callouts Manager for Laravel. 
 
+## Video Demo
+
+<a href="https://www.youtube.com/watch?v=Hy_qZTljupQ" target="_blank">https://www.youtube.com/watch?v=Hy_qZTljupQ</a>
+
 
 ## Installation
 
