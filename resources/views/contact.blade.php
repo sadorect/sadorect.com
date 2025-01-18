@@ -15,7 +15,7 @@
 
 
     <!-- Contact Start -->
-    <div class="container-fluid bg-secondary px-0">
+    <div class="container-fluid  px-0">
         <div class="row g-0">
             <div class="col-lg-6 py-6 px-5">
                 <h1 class="display-5 mb-4">Contact For Any Queries</h1>
@@ -51,7 +51,7 @@
                     </div>
                 </form>
             </div>
-            <x-smart-ad-component slug="Google-Ads"/>
+           
 
             <!--div class="col-lg-6" style="min-height: 400px;">
                 <div class="position-relative h-100">

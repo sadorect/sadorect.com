@@ -1,4 +1,4 @@
-<div class="container-fluid bg-secondary p-0">
+<div class="container-fluid bg-white p-0">
   <div class="row g-0">
       <div class="col-lg-6 py-6 px-5">
           <h1 class="display-5 mb-4">Welcome To <span class="text-primary">SADORECT SYSTEMS</span></h1>
