@@ -37,6 +37,9 @@
             <div class="d-inline-flex align-items-center">
                 @auth
                     <a class="text-body py-2 pe-3 border-end" href="/create-post"><small>Create Post</small></a>
+                    @if(auth()->user()->is_admin)
+        <a href="{{ route('admin.dashboard') }}" class="nav-item nav-link">Admin Dashboard</a>
+    @endif
                     <form method="POST" action="{{ route('logout')}}">
                         @csrf
                         <button class="text-body py-2 px-3 border-end"><small>Logout</small></button>

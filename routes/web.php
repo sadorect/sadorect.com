@@ -5,6 +5,8 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PortfolioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +54,11 @@ Route::get('/portfolio', function () {
     return view('portfolio');
 })->name('portfolio');
 
-
+Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::resource('portfolio', PortfolioController::class);
+    Route::resource('users', UserController::class);
+   // Route::get('settings', [AdminSettingController::class, 'index'])->name('admin.settings');
+});
 
 //require __DIR__.'/auth.php';

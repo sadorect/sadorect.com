@@ -2,25 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     public function login(Request $request) {
-        
-        $incomingFields = $request->validate([
+        $credentials = $request->validate([
             'username' => 'required',
             'password' => 'required'
         ]);
-        
-        if(auth()->attempt(['username' => $incomingFields['username'], 'password' => $incomingFields['password']])){
-            
+         // Add debugging
+    Log::info('Login attempt for username: ' . $credentials['username']);
+
+        if(auth()->attempt($credentials)) {
+            Log::info('Login successful');
             $request->session()->regenerate();
-            return view('create-post');
-        } else {
-            return 'Sorry!!!';
+            return redirect()->intended('dashboard');
         }
+        
+        return back()->withErrors([
+            'username' => 'The provided credentials do not match our records.',
+        ]);
     }
+    
 
     public function logout() {
 
