@@ -20,7 +20,9 @@
                 <li class="list-inline-item" data-filter=".network">Network Solutions</li>
             </ul>
         </div>
-
+@php
+    $portfolios = App\Models\Portfolio::all();
+@endphp
         <div class="row g-5 portfolio-container">
             @foreach($portfolios as $portfolio)
                 <div class="col-lg-4 col-md-6 portfolio-item {{ $portfolio->category }}">
@@ -73,7 +75,7 @@
                                         <ul class="list-unstyled">
                                             <li><strong>Client:</strong> {{ $portfolio->client }}</li>
                                             <li><strong>Category:</strong> {{ $portfolio->category }}</li>
-                                            <li><strong>Completed:</strong> {{ $portfolio->completion_date->format('M Y') }}</li>
+                                            <li><strong>Completed:</strong> {{ \Carbon\Carbon::parse($portfolio->completion_date)->format('M Y') }}</li>
                                         </ul>
                                         <a href="{{ $portfolio->project_url }}" 
                                            class="btn btn-primary" 

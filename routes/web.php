@@ -54,9 +54,12 @@ Route::get('/portfolio', function () {
     return view('portfolio');
 })->name('portfolio');
 
-Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('portfolio', PortfolioController::class);
+    Route::get('admin/portfolio/{portfolio}/refresh-thumbnail', [PortfolioController::class, 'refreshThumbnail'])
+    ->name('portfolio.refresh-thumbnail');
+
     Route::resource('users', UserController::class);
    // Route::get('settings', [AdminSettingController::class, 'index'])->name('admin.settings');
 });

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Portfolio;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 
 class PortfolioController extends Controller
@@ -25,21 +25,21 @@ class PortfolioController extends Controller
         $validated = $request->validate([
             'title' => 'required|max:255',
             'description' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'category' => 'required',
+            'project_url' => 'required|url',
+            'category' => 'required|in:web,app,network',
             'client' => 'required',
-            'completion_date' => 'required|date'
+            'completion_date' => 'required|date',
+            'image' => 'image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('portfolio', 'public');
-            $validated['image'] = $imagePath;
+            $validated['image'] = $request->file('image')->store('portfolio', 'public');
         }
 
         Portfolio::create($validated);
 
         return redirect()->route('admin.portfolio.index')
-            ->with('success', 'Portfolio item created successfully');
+            ->with('success', 'Project added successfully');
     }
 
     public function edit(Portfolio $portfolio)
@@ -47,31 +47,42 @@ class PortfolioController extends Controller
         return view('admin.portfolio.edit', compact('portfolio'));
     }
 
-    public function show(Portfolio $portfolio)
-    {
-        return view('admin.portfolio.show', compact('portfolio'));
-    }
-
     public function update(Request $request, Portfolio $portfolio)
     {
         $validated = $request->validate([
             'title' => 'required|max:255',
             'description' => 'required',
-            'image' => 'image|mimes:jpeg,png,jpg|max:2048',
-            'category' => 'required',
+            'project_url' => 'required|url',
+            'category' => 'required|in:web,app,network',
             'client' => 'required',
-            'completion_date' => 'required|date'
+            'completion_date' => 'required|date',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
         if ($request->hasFile('image')) {
             Storage::disk('public')->delete($portfolio->image);
-            $imagePath = $request->file('image')->store('portfolio', 'public');
-            $validated['image'] = $imagePath;
+            $validated['image'] = $request->file('image')->store('portfolio', 'public');
         }
 
         $portfolio->update($validated);
 
         return redirect()->route('admin.portfolio.index')
-            ->with('success', 'Portfolio item updated successfully');
+            ->with('success', 'Project updated successfully');
     }
+
+    public function destroy(Portfolio $portfolio)
+    {
+        Storage::disk('public')->delete($portfolio->image);
+        $portfolio->delete();
+
+        return redirect()->route('admin.portfolio.index')
+            ->with('success', 'Project deleted successfully');
+    }
+
+    public function refreshThumbnail(Portfolio $portfolio)
+{
+    $portfolio->refreshThumbnail();
+    return back()->with('success', 'Thumbnail refreshed successfully');
+}
+
 }
