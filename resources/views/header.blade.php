@@ -36,8 +36,8 @@
         <div class="col-md-6 text-center text-lg-start mb-2 mb-lg-0">
             <div class="d-inline-flex align-items-center">
                 @auth
-                    <a class="text-body py-2 pe-3 border-end" href="/create-post"><small>Create Post</small></a>
-                    @if(auth()->user()->is_admin)
+                    
+                    @if(auth()->user()->isAdmin())
         <a href="{{ route('admin.dashboard') }}" class="nav-item nav-link">Admin Dashboard</a>
     @endif
                     <form method="POST" action="{{ route('logout')}}">

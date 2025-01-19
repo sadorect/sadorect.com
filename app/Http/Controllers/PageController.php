@@ -7,11 +7,9 @@ use Illuminate\Http\Request;
 class PageController extends Controller
 {
     public function showCorrectHomepage() {
-        if(auth()->check()){
-            return view('create-post');
-        } else {
+       
             return view('homepage');
-        }
+       
     }
 
     public function homepage(Request $request) {
