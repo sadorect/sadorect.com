@@ -64,4 +64,4 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
    // Route::get('settings', [AdminSettingController::class, 'index'])->name('admin.settings');
 });
 
-//require __DIR__.'/auth.php';
+require __DIR__.'/auth.php';
