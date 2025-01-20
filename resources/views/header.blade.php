@@ -21,12 +21,14 @@
     
     <!-- Conditional CSS -->
     @if(request()->is('login'))
-        <link href="css/login-form.css" rel="stylesheet">
-    @endif
+    <link href="{{ asset('css/login-form.css') }}" rel="stylesheet">
+@endif
+
 
     <!-- Scripts -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4048280593346646" crossorigin="anonymous"></script>
-    <script src="{{ asset('vendor/smart-ads/js/smart-banner.min.js') }}"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles')
     @stack('scripts')
 </head>
 
