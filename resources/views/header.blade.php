@@ -5,15 +5,15 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Software Development, Web Development, Mobile Apps" name="keywords">
     <meta content="Professional Software Development Services" name="description">
-
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <!-- Core CSS -->
-    <link href="{{asset('assets/css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet">
+    
     <link href="{{asset('assets/css/icons.min.css')}}" rel="stylesheet">
     <link href="{{asset('assets/css/app.min.css')}}" id="app-style" rel="stylesheet">
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+   
     
     <!-- Fonts and Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+   
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
     
     <!-- Libraries -->
@@ -26,9 +26,9 @@
 
 
     <!-- Scripts -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4048280593346646" crossorigin="anonymous"></script>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @stack('styles')
+    
+   
+    
     @stack('scripts')
 </head>
 
@@ -66,20 +66,48 @@
 </div>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
-    <a href="{{ route('/')}}" class="navbar-brand p-0">
-        <h1 class="m-0 text-uppercase text-primary"><i class="far fa-smile text-primary me-2"></i>Sadorect</h1>
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-        <div class="navbar-nav ms-auto py-0 me-n3">
-            <a href="{{ route('/')}}" class="nav-item nav-link {{ request()->is('/') ? 'active' : ''}}">Home</a>
-            <a href="{{ route('service')}}" class="nav-item nav-link {{ request()->is('service') ? 'active' : ''}}">Service</a>
-            <a href="{{ route('portfolio')}}" class="nav-item nav-link {{ request()->is('portfolio') ? 'active' : ''}}">Portfolio</a>
+<!-- Navbar -->
+<nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <!-- Brand -->
+            <div class="flex-shrink-0 flex items-center">
+                <a href="{{ route('/')}}" class="text-primary text-2xl font-bold uppercase">
+                    <i class="far fa-smile text-primary mr-2"></i>Sadorect
+                </a>
+            </div>
 
-            <a href="contact" class="nav-item nav-link {{ request()->is('contact') ? 'active' : ''}}">Contact</a>
+            <!-- Mobile menu button -->
+            <div class="flex items-center sm:hidden">
+                <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary" aria-controls="mobile-menu" aria-expanded="false">
+                    <span class="sr-only">Open main menu</span>
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Desktop menu -->
+            <div class="hidden sm:flex sm:items-center sm:ml-6">
+                <div class="flex space-x-4">
+                    <a href="{{ route('/')}}" class="nav-link {{ request()->is('/') ? 'text-primary' : 'text-gray-600' }} hover:text-primary px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                    <a href="{{ route('service')}}" class="nav-link {{ request()->is('service') ? 'text-primary' : 'text-gray-600' }} hover:text-primary px-3 py-2 rounded-md text-sm font-medium">Service</a>
+                    <a href="{{ route('portfolio')}}" class="nav-link {{ request()->is('portfolio') ? 'text-primary' : 'text-gray-600' }} hover:text-primary px-3 py-2 rounded-md text-sm font-medium">Portfolio</a>
+                    <a href="contact" class="nav-link {{ request()->is('contact') ? 'text-primary' : 'text-gray-600' }} hover:text-primary px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div class="sm:hidden" id="mobile-menu">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+            <a href="{{ route('/')}}" class="nav-link {{ request()->is('/') ? 'text-primary' : 'text-gray-600' }} hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Home</a>
+            <a href="{{ route('service')}}" class="nav-link {{ request()->is('service') ? 'text-primary' : 'text-gray-600' }} hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Service</a>
+            <a href="{{ route('portfolio')}}" class="nav-link {{ request()->is('portfolio') ? 'text-primary' : 'text-gray-600' }} hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Portfolio</a>
+            <a href="contact" class="nav-link {{ request()->is('contact') ? 'text-primary' : 'text-gray-600' }} hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Contact</a>
         </div>
     </div>
 </nav>
+
+

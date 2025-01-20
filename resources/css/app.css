@@ -1,3 +1,10 @@
+/* Load Bootstrap first */
+@import './bootstrap.min.css';
+
+/* Then your custom styles */
+@import './style.css';
+
+/* Tailwind last to allow custom overrides */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
