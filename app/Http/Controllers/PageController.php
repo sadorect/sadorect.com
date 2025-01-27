@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Portfolio;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
     public function showCorrectHomepage() {
        
-            return view('homepage');
+        return view('homepage', ['title' => 'Sadorect Systems']);
        
     }
 
@@ -29,6 +30,11 @@ class PageController extends Controller
         return view('contact');
     }
 
+    public function portfolio()
+    {
+        $portfolios = Portfolio::latest()->paginate(10);
+        return view('portfolio', compact('portfolios'));
+    }
     public function pages() {
         return view('pages');
     }

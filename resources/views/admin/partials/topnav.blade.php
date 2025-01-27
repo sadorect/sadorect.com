@@ -9,12 +9,13 @@
         <div class="d-flex align-items-center">
             <!-- User Profile -->
             <div class="dropdown d-inline-block">
+                @auth
                 <button type="button" class="btn header-item" id="page-header-user-dropdown"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="d-none d-xl-inline-block ms-1">{{ auth()->user()->name }}</span>
                     <i class="fas fa-chevron-down d-none d-xl-inline-block"></i>
                 </button>
-                <div class="dropdown-menu dropdown-menu-end">
+                @endauth                <div class="dropdown-menu dropdown-menu-end">
                     <!-- Profile -->
                     <a class="dropdown-item" href="#">
                         <i class="fas fa-user-circle font-size-16 align-middle me-1"></i>
