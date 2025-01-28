@@ -80,11 +80,13 @@ public function refreshThumbnail()
         }
 
         Browsershot::url($url)
-            ->setNodeBinary(self::getNodePath())
-            ->setNpmBinary(self::getNpmPath())
-            ->windowSize(1920, 1080)
-            ->waitUntilNetworkIdle()
-            ->save($path);
+        ->setNodeBinary(self::getNodePath())
+        ->setNpmBinary(self::getNpmPath())
+        ->windowSize(1920, 1080)
+        ->waitUntilNetworkIdle()
+        ->ignoreHttpsErrors() // Add this line to ignore SSL certificate issues
+        ->setOption('args', ['--no-sandbox', '--disable-setuid-sandbox', '--ignore-certificate-errors'])
+        ->save($path);
 
         return $filename;
     }

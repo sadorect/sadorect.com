@@ -27,7 +27,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Admin Routes
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+Route::prefix('toor')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('portfolio', PortfolioController::class);
     Route::get('portfolio/{portfolio}/refresh-thumbnail', [PortfolioController::class, 'refreshThumbnail'])
