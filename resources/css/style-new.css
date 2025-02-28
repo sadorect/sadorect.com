@@ -1,0 +1,120 @@
+/* Root Variables */
+:root {
+  --primary: #F3525A;
+  --secondary: #F6F6F6;
+  --light: #FFFFFF;
+  --dark: #152440;
+  --transition: all 0.3s ease-in-out;
+}
+
+/* Base Styles */
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  line-height: 1.6;
+}
+
+/* Typography */
+h1, h2, .font-weight-bold { font-weight: 700; }
+h3, h4, .font-weight-semi-bold { font-weight: 600; }
+h5, h6, .font-weight-medium { font-weight: 500; }
+
+/* Layout Utilities */
+.pt-6 { padding-top: 5.625rem; }
+.pb-6 { padding-bottom: 5.625rem; }
+.py-6 { padding: 5.625rem 0; }
+
+/* Buttons */
+.btn {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.btn-primary { color: var(--light); }
+
+/* Button Sizes */
+.btn-square { width: 2.25rem; height: 2.25rem; }
+.btn-sm-square { width: 1.75rem; height: 1.75rem; }
+.btn-lg-square { width: 2.875rem; height: 2.875rem; }
+
+/* Navigation */
+.navbar-light .navbar-nav .nav-link {
+  font-family: 'Barlow', sans-serif;
+  padding: 2.188rem 0.938rem;
+  font-size: 1.125rem;
+  text-transform: uppercase;
+  color: var(--dark);
+  transition: var(--transition);
+}
+
+/* Services */
+.service-item {
+  position: relative;
+  height: 21.875rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+/* Team Section */
+.team-item img {
+  transform: scale(1.15);
+  margin-left: -1.875rem;
+  transition: var(--transition);
+}
+
+/* Portfolio */
+.portfolio-item {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1.875rem;
+}
+
+.portfolio-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+/* Media Queries */
+@media (max-width: 1200px) {
+  html { font-size: 15px; }
+}
+
+@media (max-width: 992px) {
+  .navbar-light .navbar-nav .nav-link {
+      padding: 0.625rem 0;
+  }
+  
+  .service-item { height: 18.75rem; }
+}
+
+@media (max-width: 768px) {
+  html { font-size: 14px; }
+  
+  .team-item img {
+      margin-left: 0;
+      transform: scale(1);
+  }
+}
+
+@media (max-width: 576px) {
+  .carousel-caption h5 { font-size: 0.875rem; }
+  .carousel-caption h1 { font-size: 1.875rem; }
+  
+  .portfolio-overlay { opacity: 0.8; }
+}
+
+/* Print Styles */
+@media print {
+  .no-print { display: none; }
+}
